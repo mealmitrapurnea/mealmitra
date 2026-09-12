@@ -36,6 +36,13 @@ label{font-size:13px;font-weight:700} .hidden{display:none!important} .msg{paddi
 footer{background:#0d3023;color:white;text-align:center;padding:25px}
 @media(max-width:700px){.plans,.specials,.dashgrid{grid-template-columns:1fr} .nav .brand{font-size:21px}}
 </style>
+
+<style>
+  #loginSection, #signupSection, #loginForm, #signupForm,
+  #customerDashboard, #dashboardSection, .auth-section, .dashboard-section,
+  #logoutBtn, .logout-btn { display:none !important; }
+</style>
+
 </head>
 <body>
 <header><div class="container nav"><div class="brand">🌿 Meal Mitra<small>Tiffin Today, A Healthier Tomorrow</small></div><div id="navActions"><a class="btn btn-light" href="#account">Login / Sign Up</a></div></div></header>
@@ -50,8 +57,8 @@ footer{background:#0d3023;color:white;text-align:center;padding:25px}
 </div></section>
 
 <section><div class="container"><h2>Monthly Tiffin Plans</h2><div class="plans">
-<div class="card"><h3>Basic</h3><div class="price">₹2,999 <small>/ month</small></div><p>Simple • Healthy • Affordable</p><b>Lunch — Choose One</b><ul><li>5 Roti + Dal + 1 Sabzi + Salad + Achar/Chutney</li><li>OR Rice + 2 Roti + Dal + 1 Sabzi + Salad + Achar/Chutney</li></ul><b>Dinner — Fixed</b><ul><li>5 Roti + Dal + 1 Sabzi + Salad + Achar/Chutney</li></ul><button class="btn btn-primary" onclick="choosePlan('basic',2999)">Choose Basic — ₹2,999</button><div class="special"><b>⭐ Sunday Special Lunch — Included</b><br>Puri • Pulao • Paneer • Special Sabzi • Mithai • Salad</div></div>
-<div class="card plus"><h3>Meal Mitra Plus ⭐</h3><div class="price">₹3,499 <small>/ month</small></div><p>More Variety • More Nutrition • More Happiness</p><b>Lunch — Choose One</b><ul><li>5 Roti + Dal + 2 Sabzi + Salad + Achar/Chutney</li><li>OR Rice + 2 Roti + Dal + 2 Sabzi + Salad + Achar/Chutney</li></ul><b>Dinner — Fixed</b><ul><li>5 Roti + Dal + 2 Sabzi + Salad + Achar/Chutney</li></ul><button class="btn btn-primary" onclick="choosePlan('plus',3499)">Choose Plus — ₹3,499</button><div class="special"><b>⭐ 4 Special Tiffins Every Week</b><br>Sunday Lunch • Tuesday Lunch • Wednesday Dinner • Friday Dinner</div></div>
+<div class="card"><h3>Basic</h3><div class="price">₹2,999 <small>/ month</small></div><p>Simple • Healthy • Affordable</p><b>Lunch — Choose One</b><ul><li>5 Roti + Dal + 1 Sabzi + Salad + Achar/Chutney</li><li>OR Rice + 2 Roti + Dal + 1 Sabzi + Salad + Achar/Chutney</li></ul><b>Dinner — Fixed</b><ul><li>5 Roti + Dal + 1 Sabzi + Salad + Achar/Chutney</li></ul><a class="btn btn-primary" href="https://wa.me/916204843267?text=Hello%20Meal%20Mitra%2C%20I%20want%20to%20enquire%20about%20the%20tiffin%20plans." target="_blank" rel="noopener">WhatsApp to Enquire</a><div class="special"><b>⭐ Sunday Special Lunch — Included</b><br>Puri • Pulao • Paneer • Special Sabzi • Mithai • Salad</div></div>
+<div class="card plus"><h3>Meal Mitra Plus ⭐</h3><div class="price">₹3,499 <small>/ month</small></div><p>More Variety • More Nutrition • More Happiness</p><b>Lunch — Choose One</b><ul><li>5 Roti + Dal + 2 Sabzi + Salad + Achar/Chutney</li><li>OR Rice + 2 Roti + Dal + 2 Sabzi + Salad + Achar/Chutney</li></ul><b>Dinner — Fixed</b><ul><li>5 Roti + Dal + 2 Sabzi + Salad + Achar/Chutney</li></ul><a class="btn btn-primary" href="https://wa.me/916204843267?text=Hello%20Meal%20Mitra%2C%20I%20want%20to%20enquire%20about%20the%20tiffin%20plans." target="_blank" rel="noopener">WhatsApp to Enquire</a><div class="special"><b>⭐ 4 Special Tiffins Every Week</b><br>Sunday Lunch • Tuesday Lunch • Wednesday Dinner • Friday Dinner</div></div>
 </div></div></section>
 
 <section><div class="container schedule"><h2>Special Tiffins</h2><div class="specials">
@@ -62,9 +69,9 @@ footer{background:#0d3023;color:white;text-align:center;padding:25px}
 </div><p style="text-align:center;margin-bottom:0">Sunday: Special Lunch Only • Sunday Dinner Service Break</p></div></section>
 
 <section id="account"><div class="container"><h2>Customer Account</h2><div class="authbox">
-<div class="tabs"><button id="loginTab" class="active" onclick="showLogin()">Login</button><button id="signupTab" onclick="showSignup()">Create Account</button></div>
+<div class="tabs"></div>
 <div id="authMsg"></div>
-<form id="loginForm" onsubmit="login(event)"><label>Email</label><input id="loginEmail" type="email" required><label>Password</label><input id="loginPassword" type="password" required><button class="btn btn-primary" type="submit">Login</button></form>
+<form id="loginForm" onsubmit="login(event)"><label>Email</label><input id="loginEmail" type="email" required><label>Password</label><input id="loginPassword" type="password" required><button class="btn btn-primary" type="submit">Contact Us</button></form>
 <form id="signupForm" class="hidden" onsubmit="signup(event)"><label>Full Name *</label><input id="name" required><label>Mobile Number *</label><input id="phone" type="tel" required><label>Email *</label><input id="email" type="email" required><label>Location / Area *</label><input id="location" required placeholder="e.g. Line Bazar, Purnea"><label>Full Delivery Address *</label><textarea id="address" required rows="3"></textarea><label>Password *</label><input id="password" type="password" minlength="6" required><button class="btn btn-primary" type="submit">Create Account</button></form>
 </div></div></section>
 </div>
@@ -73,7 +80,7 @@ footer{background:#0d3023;color:white;text-align:center;padding:25px}
 <div class="nav" style="margin-bottom:18px"><h2 style="margin:0;text-align:left">My Meal Mitra Account</h2><button class="btn btn-light" onclick="logout()">Logout</button></div>
 <div class="dashgrid"><div class="stat">Plan<strong id="plan">—</strong></div><div class="stat">Delivered<strong id="delivered">0</strong></div><div class="stat">Remaining<strong id="remaining">0</strong></div></div>
 <div class="card" style="margin-top:15px"><h3>My Details</h3><p><b>Name:</b> <span id="dName"></span></p><p><b>Mobile:</b> <span id="dPhone"></span></p><p><b>Location:</b> <span id="dLocation"></span></p><p><b>Address:</b> <span id="dAddress"></span></p></div>
-<div class="card" style="margin-top:15px"><h3>Buy a New Plan</h3><p>Choose a monthly plan. Your request will be sent to Meal Mitra for payment verification and activation.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-primary" onclick="choosePlan('basic',2999)">Basic ₹2,999</button><button class="btn btn-primary" onclick="choosePlan('plus',3499)">Plus ₹3,499</button></div><div id="orderMsg" class="msg hidden"></div></div>
+<div class="card" style="margin-top:15px"><h3>Buy a New Plan</h3><p>Choose a monthly plan. Your request will be sent to Meal Mitra for payment verification and activation.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn btn-primary" href="https://wa.me/916204843267?text=Hello%20Meal%20Mitra%2C%20I%20want%20to%20enquire%20about%20the%20tiffin%20plans." target="_blank" rel="noopener">WhatsApp to Enquire</a><a class="btn btn-primary" href="https://wa.me/916204843267?text=Hello%20Meal%20Mitra%2C%20I%20want%20to%20enquire%20about%20the%20tiffin%20plans." target="_blank" rel="noopener">WhatsApp to Enquire</a></div><div id="orderMsg" class="msg hidden"></div></div>
 <div class="card" style="margin-top:15px"><h3>Subscription</h3><p id="subInfo">No active subscription yet. Please contact Meal Mitra to activate your plan.</p><button id="cancelBtn" class="btn" style="background:#8d3f32;color:white" onclick="cancelSubscription()">Cancel Subscription</button><p id="cancelNote" class="msg hidden">Your subscription is cancelled. Customer self-reactivation is not available. Contact admin for a new subscription.</p></div>
 </div></div>
 
@@ -189,5 +196,25 @@ async function cancelSubscription(){
 }
 (async()=>{const {data}=await db.auth.getSession();if(data.session){currentUser=data.session.user;const {data:rp}=await db.from('profiles').select('role').eq('id',currentUser.id).single();if(rp?.role==='admin'||rp?.role==='delivery_boy'){location.href='admin.html';return;}await loadDashboard();}})();
 </script>
+
+<div class="direct-contact" style="
+  position:fixed;left:0;right:0;bottom:0;z-index:9999;
+  display:flex;gap:10px;padding:10px 14px;
+  background:rgba(255,255,255,.97);box-shadow:0 -2px 12px rgba(0,0,0,.12);
+">
+  <a href="tel:+916204843267" style="
+    flex:1;text-align:center;text-decoration:none;padding:13px 10px;
+    border-radius:10px;background:#1f2937;color:#fff;font-weight:700;
+  ">📞 Call Now</a>
+  <a href="https://wa.me/916204843267?text=Hello%20Meal%20Mitra%2C%20I%20want%20to%20know%20about%20your%20tiffin%20service."
+     target="_blank" rel="noopener" style="
+    flex:1;text-align:center;text-decoration:none;padding:13px 10px;
+    border-radius:10px;background:#25D366;color:#fff;font-weight:700;
+  ">💬 WhatsApp</a>
+</div>
+<style>
+  body { padding-bottom:78px !important; }
+</style>
+
 </body>
 </html>
