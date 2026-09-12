@@ -73,7 +73,7 @@ footer{background:#0d3023;color:white;text-align:center;padding:25px}
 <div class="nav" style="margin-bottom:18px"><h2 style="margin:0;text-align:left">My Meal Mitra Account</h2><button class="btn btn-light" onclick="logout()">Logout</button></div>
 <div class="dashgrid"><div class="stat">Plan<strong id="plan">—</strong></div><div class="stat">Delivered<strong id="delivered">0</strong></div><div class="stat">Remaining<strong id="remaining">0</strong></div></div>
 <div class="card" style="margin-top:15px"><h3>My Details</h3><p><b>Name:</b> <span id="dName"></span></p><p><b>Mobile:</b> <span id="dPhone"></span></p><p><b>Location:</b> <span id="dLocation"></span></p><p><b>Address:</b> <span id="dAddress"></span></p></div>
-<div class="card" style="margin-top:15px"><h3>Buy a New Plan</h3><p>Choose a monthly plan. Your request will be sent to Meal Mitra for payment verification and activation.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-primary" onclick="choosePlan(\'basic\',2999)">Basic ₹2,999</button><button class="btn btn-primary" onclick="choosePlan(\'plus\',3499)">Plus ₹3,499</button></div><div id="orderMsg" class="msg hidden"></div></div>
+<div class="card" style="margin-top:15px"><h3>Buy a New Plan</h3><p>Choose a monthly plan. Your request will be sent to Meal Mitra for payment verification and activation.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-primary" onclick="choosePlan('basic',2999)">Basic ₹2,999</button><button class="btn btn-primary" onclick="choosePlan('plus',3499)">Plus ₹3,499</button></div><div id="orderMsg" class="msg hidden"></div></div>
 <div class="card" style="margin-top:15px"><h3>Subscription</h3><p id="subInfo">No active subscription yet. Please contact Meal Mitra to activate your plan.</p><button id="cancelBtn" class="btn" style="background:#8d3f32;color:white" onclick="cancelSubscription()">Cancel Subscription</button><p id="cancelNote" class="msg hidden">Your subscription is cancelled. Customer self-reactivation is not available. Contact admin for a new subscription.</p></div>
 </div></div>
 
@@ -92,10 +92,10 @@ function message(t, bad=false){const e=document.getElementById('authMsg');e.text
 async function signup(ev){
  ev.preventDefault();
  message('Creating your account...');
- const {data,error}=await db.auth.signUp({email:email.value,password:password.value,data:{full_name:name.value,phone:phone.value}});
+ const {data,error}=await db.auth.signUp({email:email.value,password:password.value,data:{full_name:name.value,phone:phone.value,location:location.value,address:address.value}});
  if(error){message(error.message,true);return;}
  if(!data.user){message('Signup started. Please check your email.');return;}
- message('Account created. If email confirmation is enabled, verify your email first, then login.');
+ message('Account created successfully. You can now use your Meal Mitra account.');
  document.getElementById('signupForm').reset();
  showLogin();
 }
