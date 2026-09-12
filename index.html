@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Meal Mitra | Purnea Tiffin Service</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2?v=2026091301"></script>
 <style>
 :root{--green:#176b45;--dark:#103b2b;--cream:#fffaf0;--orange:#e88935;--red:#8d3f32;--muted:#66736c}
 *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--cream);color:#173126}
@@ -92,15 +92,54 @@ function message(t, bad=false){const e=document.getElementById('authMsg');e.text
 async function signup(ev){
  ev.preventDefault();
  message('Creating your account...');
- const fullName=name.value.trim(), mobile=phone.value.trim(), area=location.value.trim(), fullAddress=address.value.trim();
- const {data,error}=await db.auth.signUp({email:email.value.trim(),password:password.value,data:{full_name:fullName,phone:mobile,location:area,address:fullAddress}});
- if(error){message(error.message,true);return;}
- if(!data.user){message('Signup started. Please check your email.');return;}
- // Also write the profile explicitly so customer details are saved even if the Auth trigger metadata is unavailable.
+
+ const fullName = document.getElementById('name').value.trim();
+ const mobile = document.getElementById('phone').value.trim();
+ const userEmail = document.getElementById('email').value.trim();
+ const area = document.getElementById('location').value.trim();
+ const fullAddress = document.getElementById('address').value.trim();
+ const userPassword = document.getElementById('password').value;
+
+ const {data,error} = await db.auth.signUp({
+   email: userEmail,
+   password: userPassword,
+   options: {
+     data: {
+       full_name: fullName,
+       phone: mobile,
+       location: area,
+       address: fullAddress
+     }
+   }
+ });
+
+ if(error){ message(error.message,true); return; }
+ if(!data.user){ message('Account creation failed. Please try again.',true); return; }
+
+ // Email confirmation is OFF, so a session should be returned.
+ // Explicitly update the profile using the authenticated customer ID.
  if(data.session){
-   const {error:profileError}=await db.from('profiles').update({full_name:fullName,phone:mobile,location:area,address:fullAddress}).eq('id',data.user.id);
-   if(profileError){message(profileError.message,true);return;}
+   const {error:profileError} = await db
+     .from('profiles')
+     .update({
+       full_name: fullName,
+       phone: mobile,
+       location: area,
+       address: fullAddress
+     })
+     .eq('id', data.user.id);
+
+   if(profileError){
+     message('Account created, but profile details could not be saved: ' + profileError.message,true);
+     return;
+   }
+ } else {
+   message('Account created. Please login once to complete your profile details.');
+   document.getElementById('signupForm').reset();
+   showLogin();
+   return;
  }
+
  message('Account created successfully. You can now use your Meal Mitra account.');
  document.getElementById('signupForm').reset();
  showLogin();
