@@ -4,6 +4,7 @@
 <style>body{font-family:system-ui;margin:0;background:#f7f1e5;color:#173126}main{max-width:1100px;margin:auto;padding:22px}h1{color:#176b45}.card{background:white;padding:18px;border-radius:15px;margin:12px 0;box-shadow:0 5px 20px #0001}button{padding:9px 13px;border:0;border-radius:9px;background:#176b45;color:#fff;font-weight:700;margin:3px;cursor:pointer}input,select{padding:10px;border:1px solid #ccc;border-radius:8px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}.danger{background:#8d3f32}</style></head>
 <body><main><h1>🌿 Meal Mitra — Admin Panel</h1><div id="msg"></div><div id="app" class="hidden">
 <div class="card"><b>Today's deliveries</b><p id="todayCount">Loading...</p><button onclick="load()">Refresh</button><button class="danger" onclick="logout()">Logout</button></div>
+<div class="card"><h2>Pending Plan Requests</h2><div style="overflow:auto"><table><thead><tr><th>Customer</th><th>Plan</th><th>Price</th><th>Requested</th><th>Action</th></tr></thead><tbody id="orders"></tbody></table></div></div>
 <div class="card"><h2>Customers & Deliveries</h2><div style="overflow:auto"><table><thead><tr><th>Customer</th><th>Plan</th><th>Date</th><th>Meal</th><th>Status</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table></div></div></div></main>
 <script>
 const db=window.supabase.createClient("https://kwgiuozwswqyqnowiqhr.supabase.co","sb_publishable_u8d6pCcXV7yhtk71vFbILw_eQkij-DQ");
@@ -19,7 +20,36 @@ async function load(){
  if(error){msg(error.message);return;}
  const today=new Date().toISOString().slice(0,10);document.getElementById('todayCount').textContent=(data||[]).filter(x=>x.delivery_date===today&&x.status==='pending').length+' pending today';
  document.getElementById('rows').innerHTML=(data||[]).map(x=>`<tr><td>${x.profiles?.full_name||'—'}<br>${x.profiles?.phone||''}</td><td>${x.subscriptions?.plan||'—'}</td><td>${x.delivery_date}</td><td>${x.meal_type}</td><td>${x.status}</td><td>${x.status==='pending'?`<button onclick="deliver('${x.id}')">Mark Delivered</button>`:''}</td></tr>`).join('');
+ const {data:orders,error:oe}=await db.from('plan_orders').select('id,customer_id,plan,price,created_at,profiles(full_name,phone)').eq('status','pending').order('created_at',{ascending:true});
+ if(oe){msg(oe.message);return;}
+ document.getElementById('orders').innerHTML=(orders||[]).map(o=>`<tr><td>${o.profiles?.full_name||'—'}<br>${o.profiles?.phone||''}</td><td>${o.plan}</td><td>₹${o.price}</td><td>${new Date(o.created_at).toLocaleString()}</td><td><button onclick="approve('${o.id}','${o.customer_id}','${o.plan}',${o.price})">Approve</button><button class="danger" onclick="rejectOrder('${o.id}')">Reject</button></td></tr>`).join('');
 }
+
+async function approve(orderId, customerId, plan, price){
+ const start=prompt('Subscription start date (YYYY-MM-DD)', new Date().toISOString().slice(0,10));
+ if(!start)return;
+ const d=new Date(start+'T00:00:00'); d.setDate(d.getDate()+29); const end=d.toISOString().slice(0,10);
+ const {data:sub,error}=await db.from('subscriptions').insert({customer_id:customerId,plan,price,start_date:start,end_date:end,status:'active'}).select().single();
+ if(error){alert(error.message);return;}
+ const rows=[]; const cur=new Date(start+'T00:00:00'); const last=new Date(end+'T00:00:00');
+ while(cur<=last){
+   const ds=cur.toISOString().slice(0,10); rows.push({subscription_id:sub.id,customer_id:customerId,delivery_date:ds,meal_type:'lunch',status:'pending'});
+   if(cur.getDay()!==0) rows.push({subscription_id:sub.id,customer_id:customerId,delivery_date:ds,meal_type:'dinner',status:'pending'});
+   cur.setDate(cur.getDate()+1);
+ }
+ const {error:de}=await db.from('deliveries').insert(rows);
+ if(de){alert('Subscription created, but deliveries could not be generated: '+de.message);return;}
+ const {error:oe}=await db.from('plan_orders').update({status:'approved',payment_status:'paid',approved_at:new Date().toISOString()}).eq('id',orderId);
+ if(oe){alert(oe.message);return;}
+ alert('Plan approved and delivery schedule created.'); load();
+}
+
+async function rejectOrder(id){
+ if(!confirm('Reject this plan request?'))return;
+ const {error}=await db.from('plan_orders').update({status:'rejected'}).eq('id',id);
+ if(error)alert(error.message); else load();
+}
+
 async function deliver(id){const {error}=await db.from('deliveries').update({status:'delivered',delivered_at:new Date().toISOString()}).eq('id',id);if(error)alert(error.message);else load();}
 async function logout(){await db.auth.signOut();location.href='index.html#account';} boot();
 </script></body></html>
