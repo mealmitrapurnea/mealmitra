@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Meal Mitra Admin</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>body{font-family:system-ui;margin:0;background:#f7f1e5;color:#173126}main{max-width:1100px;margin:auto;padding:22px}h1{color:#176b45}.card{background:white;padding:18px;border-radius:15px;margin:12px 0;box-shadow:0 5px 20px #0001}button{padding:9px 13px;border:0;border-radius:9px;background:#176b45;color:#fff;font-weight:700;margin:3px;cursor:pointer}input,select{padding:10px;border:1px solid #ccc;border-radius:8px}table{width:100%;border-collapse:collapse}th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}.danger{background:#8d3f32}</style></head>
+<body><main><h1>🌿 Meal Mitra — Admin Panel</h1><div id="msg"></div><div id="app" class="hidden">
+<div class="card"><b>Today's deliveries</b><p id="todayCount">Loading...</p><button onclick="load()">Refresh</button><button class="danger" onclick="logout()">Logout</button></div>
+<div class="card"><h2>Customers & Deliveries</h2><div style="overflow:auto"><table><thead><tr><th>Customer</th><th>Plan</th><th>Date</th><th>Meal</th><th>Status</th><th>Action</th></tr></thead><tbody id="rows"></tbody></table></div></div></div></main>
+<script>
+const db=window.supabase.createClient("https://kwgiuozwswqyqnowiqhr.supabase.co","sb_publishable_u8d6pCcXV7yhtk71vFbILw_eQkij-DQ");
+const msg=t=>document.getElementById('msg').innerHTML='<div class="card">'+t+'</div>';
+async function boot(){
+ const {data}=await db.auth.getSession(); if(!data.session){msg('Admin login required. <a href="index.html#account">Go to customer login</a>');return;}
+ const {data:p,error}=await db.from('profiles').select('role').eq('id',data.session.user.id).single();
+ if(error||p.role!=='admin'){msg('Access denied. This account is not an admin.');return;}
+ document.getElementById('app').classList.remove('hidden');load();
+}
+async function load(){
+ const {data,error}=await db.from('deliveries').select('id,customer_id,delivery_date,meal_type,status,profiles(full_name,phone),subscriptions(plan)').order('delivery_date',{ascending:false});
+ if(error){msg(error.message);return;}
+ const today=new Date().toISOString().slice(0,10);document.getElementById('todayCount').textContent=(data||[]).filter(x=>x.delivery_date===today&&x.status==='pending').length+' pending today';
+ document.getElementById('rows').innerHTML=(data||[]).map(x=>`<tr><td>${x.profiles?.full_name||'—'}<br>${x.profiles?.phone||''}</td><td>${x.subscriptions?.plan||'—'}</td><td>${x.delivery_date}</td><td>${x.meal_type}</td><td>${x.status}</td><td>${x.status==='pending'?`<button onclick="deliver('${x.id}')">Mark Delivered</button>`:''}</td></tr>`).join('');
+}
+async function deliver(id){const {error}=await db.from('deliveries').update({status:'delivered',delivered_at:new Date().toISOString()}).eq('id',id);if(error)alert(error.message);else load();}
+async function logout(){await db.auth.signOut();location.href='index.html#account';} boot();
+</script></body></html>

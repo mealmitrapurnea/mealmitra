@@ -1,69 +1,136 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Meal Mitra - Pure Vegetarian Tiffin Service in Purnea. Fresh, hygienic, home-style lunch and dinner.">
-<title>Meal Mitra | Pure Veg Tiffin Service in Purnea</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meal Mitra | Purnea Tiffin Service</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--green:#174f3b;--green2:#246b4f;--cream:#fff8e9;--gold:#e7a52b;--orange:#c85b32;--text:#26342e;--white:#fff}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--cream);line-height:1.55}
-header{background:linear-gradient(135deg,var(--green),#0e382a);color:white;padding:18px 6%;position:sticky;top:0;z-index:5}
-.nav{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center}.brand{font-size:28px;font-weight:800}.brand span{color:#f2b63e}
-.nav a{color:white;text-decoration:none;margin-left:18px;font-size:14px}
-.hero{padding:70px 6%;background:radial-gradient(circle at 85% 20%,#ffe6a4 0,transparent 28%),linear-gradient(135deg,#fff8e9,#f5e7c6)}
-.wrap{max-width:1100px;margin:auto}.hero h1{font-size:clamp(40px,7vw,72px);line-height:1;margin:0 0 15px;color:var(--green)}.hero h1 span{color:var(--orange)}
-.hero p{font-size:20px;max-width:650px}.tag{display:inline-block;background:#e9f3ed;color:var(--green);font-weight:700;padding:7px 12px;border-radius:30px}
-.buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}.btn{padding:13px 20px;border-radius:12px;text-decoration:none;font-weight:800;display:inline-block}.primary{background:var(--orange);color:#fff}.secondary{background:var(--green);color:#fff}
-section{padding:58px 6%}.title{text-align:center;color:var(--green);font-size:34px;margin:0 0 10px}.sub{text-align:center;margin:0 auto 30px;max-width:650px}
-.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;max-width:900px;margin:auto}.card{background:white;border-radius:20px;padding:28px;box-shadow:0 10px 30px #174f3b12;border:1px solid #eadfc9}.card.plus{border:2px solid var(--gold);position:relative}.badge{position:absolute;right:18px;top:18px;background:var(--gold);color:#382400;padding:5px 10px;border-radius:20px;font-size:12px;font-weight:800}.price{font-size:40px;font-weight:900;color:var(--green);margin:8px 0}.price small{font-size:15px;color:#65736d}.card h3{font-size:24px;margin:0;color:var(--green)}ul{padding-left:21px}.check li{margin:7px 0}.special{background:var(--green);color:white}.special .title{color:white}.special-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:1100px;margin:auto}.special-item{background:#fff;color:var(--text);padding:18px;border-radius:16px}.special-item strong{color:var(--orange)}.menu{max-width:900px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:18px}.menu-box{background:white;border-radius:18px;padding:22px}.menu-box h3{color:var(--green);margin-top:0}.note{background:#fff0d0;border-left:5px solid var(--gold);padding:14px 18px;border-radius:8px;margin-top:20px}
-.features{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;max-width:1000px;margin:auto}.feature{background:#fff;padding:22px;text-align:center;border-radius:16px}.icon{font-size:30px}
-.cta{background:linear-gradient(135deg,var(--orange),#a74425);color:white;text-align:center}.cta h2{font-size:38px;margin:0}.phone{font-size:30px;font-weight:900;margin:15px}.phone a{color:white;text-decoration:none}
-footer{background:#0e382a;color:#dbe9e1;text-align:center;padding:28px 6%;font-size:14px}
-@media(max-width:750px){.nav a{display:none}.cards,.menu{grid-template-columns:1fr}.special-grid,.features{grid-template-columns:1fr 1fr}.hero{padding-top:50px}.hero p{font-size:17px}.title{font-size:29px}}
-@media(max-width:430px){.special-grid,.features{grid-template-columns:1fr}.brand{font-size:24px}}
+:root{--green:#176b45;--dark:#103b2b;--cream:#fffaf0;--orange:#e88935;--red:#8d3f32;--muted:#66736c}
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:var(--cream);color:#173126}
+.container{max-width:1050px;margin:auto;padding:0 18px}
+header{background:linear-gradient(135deg,var(--dark),var(--green));color:white;padding:18px 0;position:sticky;top:0;z-index:5}
+.nav{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-size:26px;font-weight:800} .brand small{display:block;font-size:11px;font-weight:500;opacity:.85}
+button,.btn{border:0;border-radius:12px;padding:11px 16px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-primary{background:var(--orange);color:white} .btn-light{background:white;color:var(--green)}
+.hero{padding:55px 0 35px;text-align:center;background:linear-gradient(#fffaf0,#f4ead4)}
+.hero h1{font-size:clamp(34px,7vw,58px);margin:0 0 8px;color:var(--green)}
+.hero p{font-size:18px;max-width:720px;margin:12px auto;color:var(--muted);line-height:1.6}
+.badges{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:20px 0}
+.badge{background:white;border:1px solid #e5dcc9;padding:8px 12px;border-radius:999px;font-size:13px;font-weight:700}
+section{padding:38px 0} h2{text-align:center;color:var(--green);margin:0 0 24px}
+.plans{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.card{background:white;border-radius:20px;padding:24px;box-shadow:0 8px 28px #183a2412;border:1px solid #eadfca}
+.card.plus{border:2px solid var(--orange)} .price{font-size:34px;font-weight:900;color:var(--red)} .card h3{margin:0 0 5px;font-size:24px}
+ul{padding-left:20px;line-height:1.8} .special{background:#fff0dd;border-left:5px solid var(--orange);padding:13px;border-radius:12px;margin-top:14px}
+.schedule{background:var(--dark);color:white;border-radius:22px;padding:24px}
+.schedule h2{color:white} .specials{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.special-day{background:#fff;color:#173126;border-radius:14px;padding:15px} .special-day b{color:var(--red)}
+.authbox{max-width:560px;margin:auto;background:white;border-radius:20px;padding:22px;box-shadow:0 8px 28px #183a2412}
+.tabs{display:flex;gap:8px;margin-bottom:15px} .tabs button{flex:1;background:#eee} .tabs button.active{background:var(--green);color:white}
+input,textarea,select{width:100%;padding:13px;border:1px solid #d8d2c6;border-radius:10px;margin:7px 0 12px;font:inherit}
+label{font-size:13px;font-weight:700} .hidden{display:none!important} .msg{padding:11px;border-radius:10px;margin:10px 0;background:#eef7f1}
+.dashboard{background:#f3ead8;padding:25px 0} .dashgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{background:white;border-radius:15px;padding:18px;text-align:center} .stat strong{font-size:27px;color:var(--green);display:block}
+footer{background:#0d3023;color:white;text-align:center;padding:25px}
+@media(max-width:700px){.plans,.specials,.dashgrid{grid-template-columns:1fr} .nav .brand{font-size:21px}}
 </style>
 </head>
 <body>
-<header><div class="nav"><div class="brand">Meal <span>Mitra</span></div><nav><a href="#plans">Plans</a><a href="#menu">Menu</a><a href="#special">Specials</a><a href="#contact">Contact</a></nav></div></header>
+<header><div class="container nav"><div class="brand">🌿 Meal Mitra<small>Tiffin Today, A Healthier Tomorrow</small></div><div id="navActions"><a class="btn btn-light" href="#account">Login / Sign Up</a></div></div></header>
 
-<main>
-<section class="hero"><div class="wrap">
-<span class="tag">100% Pure Vegetarian • Serving in Purnea</span>
-<h1>Ghar Jaisa <span>Swad</span>,<br>Har Din Aapke Saath.</h1>
-<p><b>Fresh & hygienic tiffin service</b> for lunch and dinner. Wholesome everyday meals with special treats every week.</p>
-<div class="buttons"><a class="btn primary" href="https://wa.me/916204843267?text=Namaste%20Meal%20Mitra%2C%20mujhe%20tiffin%20service%20ke%20baare%20mein%20jaankari%20chahiye." target="_blank">Order on WhatsApp</a><a class="btn secondary" href="tel:+916204843267">Call 6204843267</a></div>
+<div id="publicSite">
+<section class="hero"><div class="container">
+<h1>Ghar Jaisa Swad,<br>Har Din Aapke Saath.</h1>
+<p>100% Pure Vegetarian tiffin service in Purnea. Fresh, hygienic and home-style meals for students, working professionals and families.</p>
+<div class="badges"><span class="badge">🥬 Pure Vegetarian</span><span class="badge">🍱 Fresh Daily</span><span class="badge">🧼 Hygienic</span><span class="badge">🛵 Timely Delivery</span></div>
+<a class="btn btn-primary" href="https://wa.me/916204843267?text=Hello%20Meal%20Mitra%2C%20I%20want%20to%20know%20about%20the%20tiffin%20plans." target="_blank">WhatsApp Us</a>
+<a class="btn btn-light" href="tel:6204843267">Call 6204843267</a>
 </div></section>
 
-<section id="plans"><h2 class="title">Monthly Tiffin Plans</h2><p class="sub">Simple plans designed for students, working professionals and anyone who wants fresh home-style vegetarian food.</p>
-<div class="cards">
-<div class="card"><h3>Basic</h3><div class="price">₹2,999 <small>/ month</small></div>
-<ul class="check"><li><b>Lunch:</b> 5 Roti <b>OR</b> Rice + 2 Roti</li><li>Dal + 1 Sabzi</li><li>Salad + Achar/Chutney</li><li><b>Dinner:</b> 5 Roti + Dal + 1 Sabzi</li><li>Salad + Achar/Chutney</li><li><b>Sunday Special Lunch included</b></li></ul></div>
-<div class="card plus"><span class="badge">MOST POPULAR</span><h3>Meal Mitra Plus</h3><div class="price">₹3,499 <small>/ month</small></div>
-<ul class="check"><li><b>Lunch:</b> 5 Roti <b>OR</b> Rice + 2 Roti</li><li>Dal + <b>2 Sabzi</b></li><li>Salad + Achar/Chutney</li><li><b>Dinner:</b> 5 Roti + Dal + <b>2 Sabzi</b></li><li>Salad + Achar/Chutney</li><li><b>4 Special Tiffins every week</b></li></ul></div>
-</div></section>
+<section><div class="container"><h2>Monthly Tiffin Plans</h2><div class="plans">
+<div class="card"><h3>Basic</h3><div class="price">₹2,999 <small>/ month</small></div><p>Simple • Healthy • Affordable</p><b>Lunch — Choose One</b><ul><li>5 Roti + Dal + 1 Sabzi + Salad + Achar/Chutney</li><li>OR Rice + 2 Roti + Dal + 1 Sabzi + Salad + Achar/Chutney</li></ul><b>Dinner — Fixed</b><ul><li>5 Roti + Dal + 1 Sabzi + Salad + Achar/Chutney</li></ul><div class="special"><b>⭐ Sunday Special Lunch — Included</b><br>Puri • Pulao • Paneer • Special Sabzi • Mithai • Salad</div></div>
+<div class="card plus"><h3>Meal Mitra Plus ⭐</h3><div class="price">₹3,499 <small>/ month</small></div><p>More Variety • More Nutrition • More Happiness</p><b>Lunch — Choose One</b><ul><li>5 Roti + Dal + 2 Sabzi + Salad + Achar/Chutney</li><li>OR Rice + 2 Roti + Dal + 2 Sabzi + Salad + Achar/Chutney</li></ul><b>Dinner — Fixed</b><ul><li>5 Roti + Dal + 2 Sabzi + Salad + Achar/Chutney</li></ul><div class="special"><b>⭐ 4 Special Tiffins Every Week</b><br>Sunday Lunch • Tuesday Lunch • Wednesday Dinner • Friday Dinner</div></div>
+</div></div></section>
 
-<section id="menu"><h2 class="title">What's in Your Tiffin?</h2><div class="menu">
-<div class="menu-box"><h3>☀️ Lunch</h3><p><b>Option 1:</b> 5 Roti + Dal + Sabzi + Salad + Achar/Chutney</p><p><b>Option 2:</b> Rice + 2 Roti + Dal + Sabzi + Salad + Achar/Chutney</p></div>
-<div class="menu-box"><h3>🌙 Dinner</h3><p><b>5 Roti</b> + Dal + Sabzi + Salad + Achar/Chutney</p><div class="note"><b>Sunday:</b> Special Lunch only. Sunday dinner is a service break.</div></div>
-</div></section>
+<section><div class="container schedule"><h2>Special Tiffins</h2><div class="specials">
+<div class="special-day"><b>SUNDAY • LUNCH</b><p>Puri, Pulao, Paneer, Special Sabzi, Mithai, Salad</p></div>
+<div class="special-day"><b>TUESDAY • LUNCH</b><p>Rice, Dal, Sabji, Special Mix Veg, Bachka</p></div>
+<div class="special-day"><b>WEDNESDAY • DINNER</b><p>Puri, Special Sabji, Kheer</p></div>
+<div class="special-day"><b>FRIDAY • DINNER</b><p>Aloo Paratha, Tomato Chutney, Achar, Salad</p></div>
+</div><p style="text-align:center;margin-bottom:0">Sunday: Special Lunch Only • Sunday Dinner Service Break</p></div></section>
 
-<section id="special" class="special"><h2 class="title">⭐ 4 Special Tiffins Every Week</h2><p class="sub">Sunday special is included in both plans. Tuesday, Wednesday and Friday specials are exclusive to Meal Mitra Plus.</p>
-<div class="special-grid">
-<div class="special-item"><strong>Sunday • Lunch</strong><p>Puri • Pulao • Paneer • Special Sabzi • Mithai • Salad</p></div>
-<div class="special-item"><strong>Tuesday • Lunch</strong><p>Rice • Dal • Sabzi • Special Mix Veg • Bachka</p></div>
-<div class="special-item"><strong>Wednesday • Dinner</strong><p>Puri • Special Sabzi • Kheer</p></div>
-<div class="special-item"><strong>Friday • Dinner</strong><p>Aloo Paratha • Tomato Chutney • Achar • Salad</p></div>
-</div></section>
+<section id="account"><div class="container"><h2>Customer Account</h2><div class="authbox">
+<div class="tabs"><button id="loginTab" class="active" onclick="showLogin()">Login</button><button id="signupTab" onclick="showSignup()">Create Account</button></div>
+<div id="authMsg"></div>
+<form id="loginForm" onsubmit="login(event)"><label>Email</label><input id="loginEmail" type="email" required><label>Password</label><input id="loginPassword" type="password" required><button class="btn btn-primary" type="submit">Login</button></form>
+<form id="signupForm" class="hidden" onsubmit="signup(event)"><label>Full Name *</label><input id="name" required><label>Mobile Number *</label><input id="phone" type="tel" required><label>Email *</label><input id="email" type="email" required><label>Location / Area *</label><input id="location" required placeholder="e.g. Line Bazar, Purnea"><label>Full Delivery Address *</label><textarea id="address" required rows="3"></textarea><label>Password *</label><input id="password" type="password" minlength="6" required><button class="btn btn-primary" type="submit">Create Account</button></form>
+</div></div></section>
+</div>
 
-<section><h2 class="title">Why Meal Mitra?</h2><div class="features">
-<div class="feature"><div class="icon">🥗</div><b>100% Vegetarian</b><p>Pure veg meals</p></div>
-<div class="feature"><div class="icon">✨</div><b>Fresh & Hygienic</b><p>Prepared with care</p></div>
-<div class="feature"><div class="icon">🏠</div><b>Home-style Taste</b><p>Comfort in every meal</p></div>
-<div class="feature"><div class="icon">🛵</div><b>Timely Delivery</b><p>Reliable service</p></div>
-</div></section>
+<div id="dashboard" class="hidden dashboard"><div class="container">
+<div class="nav" style="margin-bottom:18px"><h2 style="margin:0;text-align:left">My Meal Mitra Account</h2><button class="btn btn-light" onclick="logout()">Logout</button></div>
+<div class="dashgrid"><div class="stat">Plan<strong id="plan">—</strong></div><div class="stat">Delivered<strong id="delivered">0</strong></div><div class="stat">Remaining<strong id="remaining">0</strong></div></div>
+<div class="card" style="margin-top:15px"><h3>My Details</h3><p><b>Name:</b> <span id="dName"></span></p><p><b>Mobile:</b> <span id="dPhone"></span></p><p><b>Location:</b> <span id="dLocation"></span></p><p><b>Address:</b> <span id="dAddress"></span></p></div>
+<div class="card" style="margin-top:15px"><h3>Subscription</h3><p id="subInfo">No active subscription yet. Please contact Meal Mitra to activate your plan.</p><button id="cancelBtn" class="btn" style="background:#8d3f32;color:white" onclick="cancelSubscription()">Cancel Subscription</button><p id="cancelNote" class="msg hidden">Your subscription is cancelled. Customer self-reactivation is not available. Contact admin for a new subscription.</p></div>
+</div></div>
 
-<section id="contact" class="cta"><h2>Ready for Your Daily Tiffin?</h2><p>Fresh food. Fair price. Ghar jaisa swad.</p><div class="phone"><a href="tel:+916204843267">📞 6204843267</a></div><div class="buttons" style="justify-content:center"><a class="btn secondary" href="https://wa.me/916204843267?text=Namaste%20Meal%20Mitra%2C%20main%20tiffin%20service%20start%20karna%20chahta%2Fchahti%20hoon." target="_blank">💬 WhatsApp Us</a></div></section>
-</main>
-<footer><b>Meal Mitra</b> • Pure Vegetarian Tiffin Service • Purnea<br>Ghar Jaisa Swad, Har Din Aapke Saath ❤️</footer>
-</body></html>
+<footer>Meal Mitra • Purnea, Bihar • 📞 6204843267</footer>
+
+<script>
+const SUPABASE_URL = "https://kwgiuozwswqyqnowiqhr.supabase.co";
+const SUPABASE_KEY = "sb_publishable_u8d6pCcXV7yhtk71vFbILw_eQkij-DQ";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUser = null, currentSub = null;
+
+function showLogin(){document.getElementById('loginForm').classList.remove('hidden');document.getElementById('signupForm').classList.add('hidden');document.getElementById('loginTab').classList.add('active');document.getElementById('signupTab').classList.remove('active');}
+function showSignup(){document.getElementById('signupForm').classList.remove('hidden');document.getElementById('loginForm').classList.add('hidden');document.getElementById('signupTab').classList.add('active');document.getElementById('loginTab').classList.remove('active');}
+function message(t, bad=false){const e=document.getElementById('authMsg');e.textContent=t;e.className='msg';if(bad)e.style.background='#ffe9e6';}
+
+async function signup(ev){
+ ev.preventDefault();
+ message('Creating your account...');
+ const {data,error}=await db.auth.signUp({email:email.value,password:password.value,data:{full_name:name.value,phone:phone.value}});
+ if(error){message(error.message,true);return;}
+ if(!data.user){message('Signup started. Please check your email.');return;}
+ const {error:pErr}=await db.from('profiles').update({location:location.value,address:address.value,phone:phone.value,full_name:name.value}).eq('id',data.user.id);
+ if(pErr){message('Account created, but profile update needs attention: '+pErr.message,true);return;}
+ message('Account created. If email confirmation is enabled, verify your email first, then login.');
+ document.getElementById('signupForm').reset();
+ showLogin();
+}
+
+async function login(ev){
+ ev.preventDefault(); message('Signing in...');
+ const {data,error}=await db.auth.signInWithPassword({email:loginEmail.value,password:loginPassword.value});
+ if(error){message(error.message,true);return;}
+ currentUser=data.user; await loadDashboard();
+}
+async function logout(){await db.auth.signOut();currentUser=null;currentSub=null;document.getElementById('dashboard').classList.add('hidden');document.getElementById('publicSite').classList.remove('hidden');document.getElementById('navActions').innerHTML='<a class="btn btn-light" href="#account">Login / Sign Up</a>';location.hash='account';}
+async function loadDashboard(){
+ const {data:p,error:pe}=await db.from('profiles').select('*').eq('id',currentUser.id).single();
+ if(pe){message(pe.message,true);return;}
+ const {data:s}=await db.from('subscriptions').select('*').eq('customer_id',currentUser.id).order('created_at',{ascending:false});
+ currentSub=s?.[0]||null;
+ document.getElementById('dName').textContent=p.full_name||'—';document.getElementById('dPhone').textContent=p.phone||'—';document.getElementById('dLocation').textContent=p.location||'—';document.getElementById('dAddress').textContent=p.address||'—';
+ if(currentSub){
+   document.getElementById('plan').textContent=currentSub.plan==='plus'?'Plus':'Basic';
+   const {data:del}=await db.from('deliveries').select('status').eq('subscription_id',currentSub.id);
+   const delivered=(del||[]).filter(x=>x.status==='delivered').length; const total=(del||[]).filter(x=>x.status!=='cancelled').length;
+   document.getElementById('delivered').textContent=delivered; document.getElementById('remaining').textContent=Math.max(0,total-delivered);
+   document.getElementById('subInfo').textContent=`${currentSub.plan==='plus'?'Meal Mitra Plus':'Basic'} • ₹${currentSub.price} • ${currentSub.start_date} to ${currentSub.end_date} • ${currentSub.status}`;
+   document.getElementById('cancelBtn').classList.toggle('hidden',currentSub.status!=='active');document.getElementById('cancelNote').classList.toggle('hidden',currentSub.status!=='cancelled');
+ } else {document.getElementById('plan').textContent='—';document.getElementById('delivered').textContent='0';document.getElementById('remaining').textContent='0';document.getElementById('cancelBtn').classList.add('hidden');}
+ document.getElementById('publicSite').classList.add('hidden');document.getElementById('dashboard').classList.remove('hidden');document.getElementById('navActions').innerHTML='<span style="color:white;font-weight:700">Account</span>';
+}
+async function cancelSubscription(){
+ if(!currentSub||currentSub.status!=='active')return;
+ if(!confirm('Cancel this subscription? Customer self-reactivation will not be possible.'))return;
+ const {error}=await db.from('subscriptions').update({status:'cancelled',cancelled_at:new Date().toISOString()}).eq('id',currentSub.id);
+ if(error){alert(error.message);return;} await loadDashboard(); alert('Subscription cancelled.');
+}
+(async()=>{const {data}=await db.auth.getSession();if(data.session){currentUser=data.session.user;await loadDashboard();}})();
+</script>
+</body>
+</html>
