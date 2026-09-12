@@ -92,9 +92,15 @@ function message(t, bad=false){const e=document.getElementById('authMsg');e.text
 async function signup(ev){
  ev.preventDefault();
  message('Creating your account...');
- const {data,error}=await db.auth.signUp({email:email.value,password:password.value,data:{full_name:name.value,phone:phone.value,location:location.value,address:address.value}});
+ const fullName=name.value.trim(), mobile=phone.value.trim(), area=location.value.trim(), fullAddress=address.value.trim();
+ const {data,error}=await db.auth.signUp({email:email.value.trim(),password:password.value,data:{full_name:fullName,phone:mobile,location:area,address:fullAddress}});
  if(error){message(error.message,true);return;}
  if(!data.user){message('Signup started. Please check your email.');return;}
+ // Also write the profile explicitly so customer details are saved even if the Auth trigger metadata is unavailable.
+ if(data.session){
+   const {error:profileError}=await db.from('profiles').update({full_name:fullName,phone:mobile,location:area,address:fullAddress}).eq('id',data.user.id);
+   if(profileError){message(profileError.message,true);return;}
+ }
  message('Account created successfully. You can now use your Meal Mitra account.');
  document.getElementById('signupForm').reset();
  showLogin();
