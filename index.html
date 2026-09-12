@@ -117,7 +117,7 @@ async function login(ev){
  ev.preventDefault(); message('Signing in...');
  const {data,error}=await db.auth.signInWithPassword({email:loginEmail.value,password:loginPassword.value});
  if(error){message(error.message,true);return;}
- currentUser=data.user; await loadDashboard();
+ currentUser=data.user; const {data:rp}=await db.from('profiles').select('role').eq('id',currentUser.id).single(); if(rp?.role==='admin'||rp?.role==='delivery_boy'){ location.href='admin.html'; return; } await loadDashboard();
 }
 async function logout(){await db.auth.signOut();currentUser=null;currentSub=null;document.getElementById('dashboard').classList.add('hidden');document.getElementById('publicSite').classList.remove('hidden');document.getElementById('navActions').innerHTML='<a class="btn btn-light" href="#account">Login / Sign Up</a>';location.hash='account';}
 async function loadDashboard(){
@@ -142,7 +142,7 @@ async function cancelSubscription(){
  const {error}=await db.from('subscriptions').update({status:'cancelled',cancelled_at:new Date().toISOString()}).eq('id',currentSub.id);
  if(error){alert(error.message);return;} await loadDashboard(); alert('Subscription cancelled.');
 }
-(async()=>{const {data}=await db.auth.getSession();if(data.session){currentUser=data.session.user;await loadDashboard();}})();
+(async()=>{const {data}=await db.auth.getSession();if(data.session){currentUser=data.session.user;const {data:rp}=await db.from('profiles').select('role').eq('id',currentUser.id).single();if(rp?.role==='admin'||rp?.role==='delivery_boy'){location.href='admin.html';return;}await loadDashboard();}})();
 </script>
 </body>
 </html>
