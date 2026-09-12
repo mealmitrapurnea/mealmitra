@@ -94,8 +94,6 @@ async function signup(ev){
  const {data,error}=await db.auth.signUp({email:email.value,password:password.value,data:{full_name:name.value,phone:phone.value}});
  if(error){message(error.message,true);return;}
  if(!data.user){message('Signup started. Please check your email.');return;}
- const {error:pErr}=await db.from('profiles').update({location:location.value,address:address.value,phone:phone.value,full_name:name.value}).eq('id',data.user.id);
- if(pErr){message('Account created, but profile update needs attention: '+pErr.message,true);return;}
  message('Account created. If email confirmation is enabled, verify your email first, then login.');
  document.getElementById('signupForm').reset();
  showLogin();
